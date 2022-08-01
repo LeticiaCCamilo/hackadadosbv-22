@@ -1,0 +1,808 @@
+{
+    "description": "A New Flow",
+    "states": [
+        {
+            "name": "Trigger",
+            "type": "trigger",
+            "transitions": [
+                {
+                    "next": "msg_inicial",
+                    "event": "incomingMessage"
+                },
+                {
+                    "event": "incomingCall"
+                },
+                {
+                    "event": "incomingConversationMessage"
+                },
+                {
+                    "event": "incomingRequest"
+                },
+                {
+                    "event": "incomingParent"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": -560,
+                    "y": -20
+                }
+            }
+        },
+        {
+            "name": "msg_inicial",
+            "type": "send-and-wait-for-reply",
+            "transitions": [
+                {
+                    "next": "split_1",
+                    "event": "incomingMessage"
+                },
+                {
+                    "event": "timeout"
+                },
+                {
+                    "event": "deliveryFailure"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": -470,
+                    "y": 200
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "body": "Olá Luiz, seu seguro auto está próximo de ser finalizado em 07/08/2022, e temos uma proposta pré-aprovada para você :D Selecione uma das opções abaixo para saber mais\n1. Agendar atendimento via telefone\n2. Verificar opções de renovação\n3. Acessar via conta digital",
+                "timeout": "3600"
+            }
+        },
+        {
+            "name": "msg_1_1",
+            "type": "send-and-wait-for-reply",
+            "transitions": [
+                {
+                    "next": "split_1_1",
+                    "event": "incomingMessage"
+                },
+                {
+                    "event": "timeout"
+                },
+                {
+                    "event": "deliveryFailure"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": -880,
+                    "y": 610
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "body": "temos os seguintes horários disponíveis, selecione uma das opções:\n1.Horário 08:00 às 11:00\n2.Horário 12:00  às 14:00 \n3. Horário 14:00 às 18:00",
+                "timeout": "3600"
+            }
+        },
+        {
+            "name": "split_1",
+            "type": "split-based-on",
+            "transitions": [
+                {
+                    "event": "noMatch"
+                },
+                {
+                    "next": "msg_1_1",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to_1",
+                            "arguments": [
+                                "{{widgets.msg_inicial.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "1"
+                        }
+                    ]
+                },
+                {
+                    "next": "send_and_reply_4",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 2",
+                            "arguments": [
+                                "{{widgets.msg_inicial.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "2"
+                        }
+                    ]
+                },
+                {
+                    "next": "send_and_reply_5",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 3",
+                            "arguments": [
+                                "{{widgets.msg_inicial.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "3"
+                        }
+                    ]
+                }
+            ],
+            "properties": {
+                "input": "{{widgets.msg_inicial.inbound.Body}}",
+                "offset": {
+                    "x": -540,
+                    "y": 410
+                }
+            }
+        },
+        {
+            "name": "split_1_1",
+            "type": "split-based-on",
+            "transitions": [
+                {
+                    "event": "noMatch"
+                },
+                {
+                    "next": "send_and_reply_3",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 1",
+                            "arguments": [
+                                "{{widgets.msg_1_1.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "1"
+                        }
+                    ]
+                },
+                {
+                    "next": "Copy_of_send_and_reply_3",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 2",
+                            "arguments": [
+                                "{{widgets.msg_1_1.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "2"
+                        }
+                    ]
+                },
+                {
+                    "next": "Copy_of_Copy_of_send_and_reply_3",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 3",
+                            "arguments": [
+                                "{{widgets.msg_1_1.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "3"
+                        }
+                    ]
+                }
+            ],
+            "properties": {
+                "input": "{{widgets.msg_1_1.inbound.Body}}",
+                "offset": {
+                    "x": -1070,
+                    "y": 890
+                }
+            }
+        },
+        {
+            "name": "send_and_reply_3",
+            "type": "send-and-wait-for-reply",
+            "transitions": [
+                {
+                    "next": "send_and_reply_1",
+                    "event": "incomingMessage"
+                },
+                {
+                    "next": "send_and_reply_1",
+                    "event": "timeout"
+                },
+                {
+                    "next": "msg_inicial",
+                    "event": "deliveryFailure"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": -1340,
+                    "y": 1140
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "body": "O horário selecionado foi 08:00  às 11:00.  Estaremos entrando em contato com você neste mesmo número. Obrigada!",
+                "timeout": "3600"
+            }
+        },
+        {
+            "name": "send_and_reply_4",
+            "type": "send-and-wait-for-reply",
+            "transitions": [
+                {
+                    "next": "split_4",
+                    "event": "incomingMessage"
+                },
+                {
+                    "next": "send_message_2",
+                    "event": "timeout"
+                },
+                {
+                    "event": "deliveryFailure"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": -320,
+                    "y": 640
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "body": "Temos as seguintes propostas pré-aprovadas:\n\nApresentação de propostas de Financiamento de veículos\nPropostas válida para: Chevrolet Onix Red 2019.*\n\nAo contratar o serviço de seguros, você receber até 5% de cash back após o processamento do novo contrato diretamente em sua conta BV. \n\nAs formas de pagamento são: débito automático, boleto bancário e cartão de crédito.\n\n*Sujeita a alterações de valores após vistoria\nSelecione uma das opções abaixo:\n\n  \n1. Proposta 1\nInicio: 07/08/2022\nTérmino: 07/08/2023\nSeguradora: Porto Seguro\n\n12x de R$ 87,98\n\n2. Proposta 2\nInicio: 07/08/2022\nTérmino: 07/08/2023\nSeguradora: CDF\n\n12x de R$ 106,98\n\n3. Proposta 3\nInicio: 07/08/2022\nTérmino: 07/08/2023\nSeguradora: Mapfre\n\n12x de R$ 120,91",
+                "timeout": "3600"
+            }
+        },
+        {
+            "name": "split_4",
+            "type": "split-based-on",
+            "transitions": [
+                {
+                    "next": "send_message_2",
+                    "event": "noMatch"
+                },
+                {
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 1",
+                            "arguments": [
+                                "{{widgets.send_and_reply_4.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "1"
+                        }
+                    ]
+                },
+                {
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 2",
+                            "arguments": [
+                                "{{widgets.send_and_reply_4.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "2"
+                        }
+                    ]
+                },
+                {
+                    "next": "send_and_reply_2",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 3",
+                            "arguments": [
+                                "{{widgets.send_and_reply_4.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "3"
+                        }
+                    ]
+                }
+            ],
+            "properties": {
+                "input": "{{widgets.send_and_reply_4.inbound.Body}}",
+                "offset": {
+                    "x": -390,
+                    "y": 840
+                }
+            }
+        },
+        {
+            "name": "send_and_reply_5",
+            "type": "send-and-wait-for-reply",
+            "transitions": [
+                {
+                    "next": "split_6",
+                    "event": "incomingMessage"
+                },
+                {
+                    "event": "timeout"
+                },
+                {
+                    "event": "deliveryFailure"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": 180,
+                    "y": 640
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "body": "Acessar sua Conta via Digital:\n1.Internet Banking\n2.Aplicativo BV",
+                "timeout": "3600"
+            }
+        },
+        {
+            "name": "split_6",
+            "type": "split-based-on",
+            "transitions": [
+                {
+                    "next": "send_message_2",
+                    "event": "noMatch"
+                },
+                {
+                    "next": "send_message_3",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 1",
+                            "arguments": [
+                                "{{widgets.send_and_reply_5.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "1"
+                        }
+                    ]
+                },
+                {
+                    "next": "send_message_4",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 2",
+                            "arguments": [
+                                "{{widgets.send_and_reply_5.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "2"
+                        }
+                    ]
+                }
+            ],
+            "properties": {
+                "input": "{{widgets.send_and_reply_5.inbound.Body}}",
+                "offset": {
+                    "x": 200,
+                    "y": 830
+                }
+            }
+        },
+        {
+            "name": "Copy_of_send_and_reply_3",
+            "type": "send-and-wait-for-reply",
+            "transitions": [
+                {
+                    "next": "send_and_reply_1",
+                    "event": "incomingMessage"
+                },
+                {
+                    "next": "send_and_reply_1",
+                    "event": "timeout"
+                },
+                {
+                    "next": "msg_inicial",
+                    "event": "deliveryFailure"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": -1020,
+                    "y": 1140
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "body": "O horário selecionado foi 12:00  às 14:00. Estaremos entrando em contato com você neste mesmo número. Obrigada!",
+                "timeout": "3600"
+            }
+        },
+        {
+            "name": "Copy_of_Copy_of_send_and_reply_3",
+            "type": "send-and-wait-for-reply",
+            "transitions": [
+                {
+                    "next": "send_and_reply_1",
+                    "event": "incomingMessage"
+                },
+                {
+                    "next": "msg_inicial",
+                    "event": "timeout"
+                },
+                {
+                    "event": "deliveryFailure"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": -700,
+                    "y": 1130
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "body": "O horário selecionado foi 14:00  às 18:00.  Estaremos entrando em contato com você neste mesmo número. Obrigada!",
+                "timeout": "3600"
+            }
+        },
+        {
+            "name": "send_message_2",
+            "type": "send-message",
+            "transitions": [
+                {
+                    "event": "sent"
+                },
+                {
+                    "event": "failed"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": -270,
+                    "y": 1920
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "to": "{{contact.channel.address}}",
+                "body": "Desculpe,não entendi o que você digitou!"
+            }
+        },
+        {
+            "name": "send_and_reply_1",
+            "type": "send-and-wait-for-reply",
+            "transitions": [
+                {
+                    "next": "split_2",
+                    "event": "incomingMessage"
+                },
+                {
+                    "event": "timeout"
+                },
+                {
+                    "event": "deliveryFailure"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": -1100,
+                    "y": 1490
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "body": "Quer voltar ao Menu inicial?",
+                "timeout": "3600"
+            }
+        },
+        {
+            "name": "split_2",
+            "type": "split-based-on",
+            "transitions": [
+                {
+                    "event": "noMatch"
+                },
+                {
+                    "next": "msg_inicial",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value matches_any_of Sim, sim, s, ok",
+                            "arguments": [
+                                "{{widgets.send_and_reply_1.inbound.Body}}"
+                            ],
+                            "type": "matches_any_of",
+                            "value": "Sim, sim, s, ok"
+                        }
+                    ]
+                },
+                {
+                    "next": "send_message_1",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value matches_any_of Não, não, n",
+                            "arguments": [
+                                "{{widgets.send_and_reply_1.inbound.Body}}"
+                            ],
+                            "type": "matches_any_of",
+                            "value": "Não, não, n"
+                        }
+                    ]
+                }
+            ],
+            "properties": {
+                "input": "{{widgets.send_and_reply_1.inbound.Body}}",
+                "offset": {
+                    "x": -1060,
+                    "y": 1830
+                }
+            }
+        },
+        {
+            "name": "send_message_1",
+            "type": "send-message",
+            "transitions": [
+                {
+                    "event": "sent"
+                },
+                {
+                    "event": "failed"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": -830,
+                    "y": 2190
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "to": "{{contact.channel.address}}",
+                "body": "Certo, tenha um Bom dia!"
+            }
+        },
+        {
+            "name": "send_message_3",
+            "type": "send-message",
+            "transitions": [
+                {
+                    "event": "sent"
+                },
+                {
+                    "event": "failed"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": 340,
+                    "y": 1090
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "to": "{{contact.channel.address}}",
+                "body": "Você será redirecionado para o seu internet banking"
+            }
+        },
+        {
+            "name": "send_message_4",
+            "type": "send-message",
+            "transitions": [
+                {
+                    "event": "sent"
+                },
+                {
+                    "event": "failed"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": 770,
+                    "y": 1080
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "to": "{{contact.channel.address}}",
+                "body": "Você será redirecionado para o aplicativo Banco BV"
+            }
+        },
+        {
+            "name": "send_and_reply_2",
+            "type": "send-and-wait-for-reply",
+            "transitions": [
+                {
+                    "next": "split_3",
+                    "event": "incomingMessage"
+                },
+                {
+                    "event": "timeout"
+                },
+                {
+                    "event": "deliveryFailure"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": -220,
+                    "y": 1180
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "body": "A opção selecionada é a 3. Neste contrato de seguro possui os seguintes serviços :\n\n- roubo;\n- furto;\n- incêndio;\n- acidentes de trânsito;\n- reembolso danos morais, materiais ou corporais;\n- Assistências 24h.\n\nDeseja prosseguir com esta renovação?\n\nSelecione uma das opções abaixo:\n\n1. Escolher outra proposta\n2. Confirmar minha escolha\n3. Retornar ao menu anterior",
+                "timeout": "3600"
+            }
+        },
+        {
+            "name": "split_3",
+            "type": "split-based-on",
+            "transitions": [
+                {
+                    "event": "noMatch"
+                },
+                {
+                    "next": "send_and_reply_6",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 2",
+                            "arguments": [
+                                "{{widgets.send_and_reply_2.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "2"
+                        }
+                    ]
+                }
+            ],
+            "properties": {
+                "input": "{{widgets.send_and_reply_2.inbound.Body}}",
+                "offset": {
+                    "x": -220,
+                    "y": 1550
+                }
+            }
+        },
+        {
+            "name": "send_and_reply_6",
+            "type": "send-and-wait-for-reply",
+            "transitions": [
+                {
+                    "next": "split_5",
+                    "event": "incomingMessage"
+                },
+                {
+                    "event": "timeout"
+                },
+                {
+                    "event": "deliveryFailure"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": 300,
+                    "y": 1630
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "body": "Em sua região a vistoria é realizada na Av. Guapó, nº 75 - Centro - Representante BV Veículo.\n\nPara marcar a vistoria, selecione uma das opções abaixo:\n1. 10/08/2022 08:00 às 18:00\n2. 11/08/2022 08:00 às 18:00\n3. 12/08/2022 08:00 às 18:00\n4. Retornar ao menu anterior",
+                "timeout": "3600"
+            }
+        },
+        {
+            "name": "split_5",
+            "type": "split-based-on",
+            "transitions": [
+                {
+                    "event": "noMatch"
+                },
+                {
+                    "next": "send_and_reply_7",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 3",
+                            "arguments": [
+                                "{{widgets.send_and_reply_6.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "3"
+                        }
+                    ]
+                }
+            ],
+            "properties": {
+                "input": "{{widgets.send_and_reply_6.inbound.Body}}",
+                "offset": {
+                    "x": 210,
+                    "y": 1880
+                }
+            }
+        },
+        {
+            "name": "send_and_reply_7",
+            "type": "send-and-wait-for-reply",
+            "transitions": [
+                {
+                    "next": "split_7",
+                    "event": "incomingMessage"
+                },
+                {
+                    "event": "timeout"
+                },
+                {
+                    "event": "deliveryFailure"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": 330,
+                    "y": 2200
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "body": "O dia da vistoria selecionado foi: 12/08/2022 das 08:00 às 18:00.\n\nPor favor, confirmar nas opções abaixo:\n\n1.Confirmar minha escolha\n2. Escolher outra data\n3. Retornar ao menu anterior",
+                "timeout": "3600"
+            }
+        },
+        {
+            "name": "split_7",
+            "type": "split-based-on",
+            "transitions": [
+                {
+                    "event": "noMatch"
+                },
+                {
+                    "next": "send_message_5",
+                    "event": "match",
+                    "conditions": [
+                        {
+                            "friendly_name": "If value equal_to 3",
+                            "arguments": [
+                                "{{widgets.send_and_reply_7.inbound.Body}}"
+                            ],
+                            "type": "equal_to",
+                            "value": "3"
+                        }
+                    ]
+                }
+            ],
+            "properties": {
+                "input": "{{widgets.send_and_reply_7.inbound.Body}}",
+                "offset": {
+                    "x": 310,
+                    "y": 2530
+                }
+            }
+        },
+        {
+            "name": "send_message_5",
+            "type": "send-message",
+            "transitions": [
+                {
+                    "next": "send_and_reply_1",
+                    "event": "sent"
+                },
+                {
+                    "event": "failed"
+                }
+            ],
+            "properties": {
+                "offset": {
+                    "x": -410,
+                    "y": 2390
+                },
+                "service": "{{trigger.message.InstanceSid}}",
+                "channel": "{{trigger.message.ChannelSid}}",
+                "from": "{{flow.channel.address}}",
+                "to": "{{contact.channel.address}}",
+                "body": "Após a vistória, ficará pendente em sua conta bancária (internet bancking ou app) disponível para confirmação na área Seguros, a confirmação da contratação com sua senha de 04 dígitos e a seleção da forma de pagamento.\n\nSerá possível resgatar seu cash back em 8 dias utéis, diretamente em sua conta BV após a confirmação de compra.\n\nOferta válida até 19/07/2022.\n\nNós agradeçemos seu interesse na renovação do seguro.\n\nCaso tiver alguma dúvida, você pode estar entrando em contato através de nossos canais de atendimento:\n3003 7888 (capitais e regiões metropolitanas)\n0800 011 7888 (demais localidades)\n\nDe 2ª a 6ª feira, das 8h às 20:40, e sábados, das 10h às 16h.."
+            }
+        }
+    ],
+    "initial_state": "Trigger",
+    "flags": {
+        "allow_concurrent_calls": false
+    }
+}
